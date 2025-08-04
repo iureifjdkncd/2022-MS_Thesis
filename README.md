@@ -8,7 +8,9 @@
 
 ### 문제 정의
 
-- 1.) 월별 물동량 데이터를 활용한 Multi-Horizon & Uncertainty Forecasting 구축
+- 1.) 월별 물동량 데이터를 활용한 Multi-Horizon기반 Uncertainty Forecasting 구축
+
+- 2.) Horizon마다 개별 확률적 추정 결과중 Best Scenario 후보 선정 
 ---
 
 ### 주요 전처리 

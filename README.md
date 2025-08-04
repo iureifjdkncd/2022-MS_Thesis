@@ -1,1 +1,116 @@
-# 2022-MS_Thesis
+## 석사학위논문 정리 
+
+### 디렉토리 구조
+- `1.) CNN-LSTM_36개월-확률분포추정.ipynb`: 확률분포추정 예시
+- `2.) CNN-LSTM_36개월-예측.ipynb` : 예측모델링 예시1
+- `3.) CNN-LSTM_12개월_예측.ipynb` : 예측모델링 예시2
+---
+
+### 문제 정의
+
+- 1.) 월별 물동량 데이터를 활용한 Multi-Horizon & Uncertainty Forecasting 구
+---
+
+### 주요 전처리 
+  - 1.) 2000.01 ~ 2022.06 다변량 데이터 수집
+
+    <img width="386" height="193" alt="화면 캡처 2025-08-04 170710" src="https://github.com/user-attachments/assets/faebcd49-60b7-4557-ba69-6c5b5fcc032c" />
+
+
+  - 2.) Train / Test & 데이터 정규화, Multi-Horizon 정의
+
+    <img width="188" height="56" alt="train_test" src="https://github.com/user-attachments/assets/205662af-7aa7-477a-9633-219dd4bc9c13" />
+
+    <img width="388" height="144" alt="화면 캡처 2025-08-04 170550" src="https://github.com/user-attachments/assets/39bf463c-f461-4ed5-9422-c19bcd9b9b0f" />
+
+    <img width="272" height="247" alt="화면 캡처 2025-08-04 171406" src="https://github.com/user-attachments/assets/c268851e-68d6-4924-9de4-9922b168050d" />
+
+    <img width="365" height="356" alt="화면 캡처 2025-08-04 171704" src="https://github.com/user-attachments/assets/83f9cca3-8d8c-4cc1-bd93-4c267a14b40e" />
+
+
+---
+### d dfdf
+
+  - 1.) 단변량 ARIMA & HoltWinters 학습
+
+       → 데이터의 1일 Lot단위 생산 특징데이터 1대1 품질 라벨링 부재
+
+  - 2.) 다변량 VECM 학습
+
+       → ADF 검정 기반 변수선택
+
+       → Johansen 공정분 검정 & AIC 기반 VECM 모델 구축
+
+       → Granger 인과관계 & 충격반응분석에 의한 다각적 해석 제공 
+
+--- 
+
+### 학습 프로세스 2 --> 딥러닝 시계열 Multi Horizon Forecast
+
+  - 1.) 다변량 LSTM Seq2Seq 적용
+
+       → 기존 다변량 수집데이터 중 1970년부터 기록이 존재하는 데이터 일부 활용
+
+       → 수출금액의 분해요소 중 Residual요소 추가 입력변수로 활용
+
+       → 전체 데이터 MinMax Scaling 적용 & T+1 ~ T+6 Multi Horizon Forecast 문제 정의
+
+       → Monte Carlo Dropout기반 확률적 추론모델 구축 (30개의 Multi Horizon Forecast 수행)
+
+  - 2.) 모델 해석 추가 
+
+       → Target(수출금액)에 대한 입력변수들의 Gradient Tape 계산 & Y=Ax모델에 대한 입력값들의 기울기 기반 가중치 나열
+
+      <img width="445" height="396" alt="다운로드 (4)" src="https://github.com/user-attachments/assets/1cec0708-839f-4802-a678-724250a55209" />
+
+
+---
+
+### 추론 프로세스 
+
+   - 1.) 통계시계열 예측 결과 
+
+       → ARIMA,HoltWinters,VECM 점추정 예측결과 & VECM 기반 Prediction Interval 정의
+
+        <img width="493" height="270" alt="다운로드" src="https://github.com/user-attachments/assets/f577f59c-58c9-45bc-92cd-f4736a929303" />
+
+        <img width="498" height="270" alt="다운로드 (1)" src="https://github.com/user-attachments/assets/6064dc37-79d0-4c07-9a82-8b494824651f" />
+
+
+   - 2.) 딥러닝 시계열 예측 결과 
+
+        → 최초 N-30기반 Monte Carlo Dropout기반 추론 결과 정의 
+
+        <img width="708" height="274" alt="다운로드 (2)" src="https://github.com/user-attachments/assets/b5ef7eb5-b3da-489d-b571-09124adbc481" />
+
+        → 통계시계열 점추정 예측결과의 평균 움직임 벤치마크 정의 & 해당 벤치마크의 최근접 MCD예측결과 30개중 1 선택 
+
+        <img width="493" height="270" alt="다운로드 (3)" src="https://github.com/user-attachments/assets/d5aa4a71-7aa2-4c17-a9d3-f9d44ef34a32" />
+
+
+   - 3.) 추론 결합
+
+        → 점추정은 VECM & Monte Carlo Dropout LSTM Seq2Seq 상호보완 
+
+        → Prediction Interval은 VECM기반으로 정의 
+
+        <img width="544" height="290" alt="화면 캡처 2025-08-04 151209" src="https://github.com/user-attachments/assets/da83d847-dd74-49df-bd22-a01e0631055a" />
+
+
+
+---
+
+### BI 활용방안 예시
+
+  - 1.) 수출금액 품목별 예측구간 제공 
+
+      <img width="739" height="284" alt="화면 캡처 2025-08-04 150728" src="https://github.com/user-attachments/assets/a17c4b4c-f834-4463-a39d-399df86368ba" />
+
+---
+
+
+#### 한국지능정보시스템학회 논문작성 링크 
+
+   https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11207563
+
+---

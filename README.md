@@ -29,88 +29,73 @@
 
 
 ---
-### d dfdf
+### 핵심 프로세스 1 예시 (Uncertainty Quantification)
 
-  - 1.) 단변량 ARIMA & HoltWinters 학습
+  - 1.) Monte Carlo Dropout 기반 Encoder-Decoder 확률분포 추정 예시
 
-       → 데이터의 1일 Lot단위 생산 특징데이터 1대1 품질 라벨링 부재
+       → 실제 물동량 분포 기준 MCD=0.8 & N=30 Uncertainty Distribution 적합도 확인 
 
-  - 2.) 다변량 VECM 학습
+    <img width="269" height="136" alt="화면 캡처 2025-08-04 172701" src="https://github.com/user-attachments/assets/55920270-6a6b-4eb7-8329-5cf3704554d3" />
 
-       → ADF 검정 기반 변수선택
+       → CNN-LSTM Best Layer 구조로 확인 
 
-       → Johansen 공정분 검정 & AIC 기반 VECM 모델 구축
+  - 2.) Monte Carlo Dropout 기반 Encoder-Decoder 예측 예시  
 
-       → Granger 인과관계 & 충격반응분석에 의한 다각적 해석 제공 
+       → Gaussian & Quantile Uncertainty (MCD N=30 & mean/median)
 
+       → Mean/Median은 점추정값으로 정의
+
+    <img width="420" height="120" alt="다운로드" src="https://github.com/user-attachments/assets/191c3938-7078-4b2f-99f0-3c35b174cb5a" />
+
+
+    <img width="448" height="130" alt="화면 캡처 2025-08-04 172213" src="https://github.com/user-attachments/assets/4d2d8457-a104-41fb-80a8-bb5d8dd7bec1" />
+
+    <img width="449" height="120" alt="화면 캡처 2025-08-04 172234" src="https://github.com/user-attachments/assets/603db172-1aa0-4024-bf50-37484e88f25b" />
+
+   - 3.) 전체 Horizon 종합 평균 성능 평가
+
+       → Gaussian & Quantile Uncertainty Estimation 중 최종 택1
+
+       → CRPS기반 Best Model구조 확인 (CNN-LSTM)
+
+     <img width="395" height="226" alt="화면 캡처 2025-08-04 173230" src="https://github.com/user-attachments/assets/73f88644-00b3-4f4b-aa77-d38cf16f6307" />
+
+
+       → Best Model & 통계기반 Multi Horizon, One-Step Ahead DL 비교
+
+       <img width="404" height="225" alt="화면 캡처 2025-08-04 173607" src="https://github.com/user-attachments/assets/e49ed487-45e1-457a-8366-5ad09be690e7" />
 --- 
 
-### 학습 프로세스 2 --> 딥러닝 시계열 Multi Horizon Forecast
+### 핵심 프로세스 2 예시 (Prior Individual Forecasts from Uncertainty Quantification)
 
-  - 1.) 다변량 LSTM Seq2Seq 적용
+  - 1.) Scenario Forecast 기준 설정 
 
-       → 기존 다변량 수집데이터 중 1970년부터 기록이 존재하는 데이터 일부 활용
+       → 각 예측Horizon마다 MCD CNN-LSTM Encoder-Decoder의 평균값 정의 (Trend 가정)
 
-       → 수출금액의 분해요소 중 Residual요소 추가 입력변수로 활용
+       → 기존 물동량의 고유 순환성 (Seasonality) 추출 
 
-       → 전체 데이터 MinMax Scaling 적용 & T+1 ~ T+6 Multi Horizon Forecast 문제 정의
+       → Horizon마다 Mean(Trend) x Seasonality값을 기준으로 선정 
 
-       → Monte Carlo Dropout기반 확률적 추론모델 구축 (30개의 Multi Horizon Forecast 수행)
+     <img width="407" height="99" alt="화면 캡처 2025-08-04 174016" src="https://github.com/user-attachments/assets/dae23746-94db-44e3-a34d-f06d964d1499" />
 
-  - 2.) 모델 해석 추가 
+      
 
-       → Target(수출금액)에 대한 입력변수들의 Gradient Tape 계산 & Y=Ax모델에 대한 입력값들의 기울기 기반 가중치 나열
+  - 2.) Scenario Forecast 후보 출력
 
-      <img width="445" height="396" alt="다운로드 (4)" src="https://github.com/user-attachments/assets/1cec0708-839f-4802-a678-724250a55209" />
+       → Horizon 기준과 MCD 확률적 추정값들 비교 (Euclidean,JS Dist, DTW)
 
+       → 최근접 5개값 집합 개별 Horizion마다 출력 
 
----
+       → 기존 물동량 대비 최근접 MCD개별 추정값들이 적어도 1개 이상 집합 존재여부 확인
 
-### 추론 프로세스 
+    <img width="399" height="327" alt="화면 캡처 2025-08-04 174730" src="https://github.com/user-attachments/assets/5f7bdc43-7110-4de1-98e1-ec5e9d81a458" />
 
-   - 1.) 통계시계열 예측 결과 
+    <img width="322" height="385" alt="화면 캡처 2025-08-04 174859" src="https://github.com/user-attachments/assets/32caae4e-8c94-4eca-94f3-f8d4b972f47a" />
 
-       → ARIMA,HoltWinters,VECM 점추정 예측결과 & VECM 기반 Prediction Interval 정의
-
-        <img width="493" height="270" alt="다운로드" src="https://github.com/user-attachments/assets/f577f59c-58c9-45bc-92cd-f4736a929303" />
-
-        <img width="498" height="270" alt="다운로드 (1)" src="https://github.com/user-attachments/assets/6064dc37-79d0-4c07-9a82-8b494824651f" />
-
-
-   - 2.) 딥러닝 시계열 예측 결과 
-
-        → 최초 N-30기반 Monte Carlo Dropout기반 추론 결과 정의 
-
-        <img width="708" height="274" alt="다운로드 (2)" src="https://github.com/user-attachments/assets/b5ef7eb5-b3da-489d-b571-09124adbc481" />
-
-        → 통계시계열 점추정 예측결과의 평균 움직임 벤치마크 정의 & 해당 벤치마크의 최근접 MCD예측결과 30개중 1 선택 
-
-        <img width="493" height="270" alt="다운로드 (3)" src="https://github.com/user-attachments/assets/d5aa4a71-7aa2-4c17-a9d3-f9d44ef34a32" />
-
-
-   - 3.) 추론 결합
-
-        → 점추정은 VECM & Monte Carlo Dropout LSTM Seq2Seq 상호보완 
-
-        → Prediction Interval은 VECM기반으로 정의 
-
-        <img width="544" height="290" alt="화면 캡처 2025-08-04 151209" src="https://github.com/user-attachments/assets/da83d847-dd74-49df-bd22-a01e0631055a" />
+### 향후 예측 예시 
 
 
 
----
-
-### BI 활용방안 예시
-
-  - 1.) 수출금액 품목별 예측구간 제공 
-
-      <img width="739" height="284" alt="화면 캡처 2025-08-04 150728" src="https://github.com/user-attachments/assets/a17c4b4c-f834-4463-a39d-399df86368ba" />
-
----
-
-
-#### 한국지능정보시스템학회 논문작성 링크 
-
-   https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE11207563
+  
 
 ---

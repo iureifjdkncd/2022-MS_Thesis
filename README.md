@@ -8,7 +8,7 @@
 
 ### 문제 정의
 
-- 1.) 월별 물동량 데이터를 활용한 Multi-Horizon & Uncertainty Forecasting 구
+- 1.) 월별 물동량 데이터를 활용한 Multi-Horizon & Uncertainty Forecasting 구축
 ---
 
 ### 주요 전처리 
@@ -17,11 +17,15 @@
     <img width="386" height="193" alt="화면 캡처 2025-08-04 170710" src="https://github.com/user-attachments/assets/faebcd49-60b7-4557-ba69-6c5b5fcc032c" />
 
 
-  - 2.) Train / Test & 데이터 정규화, Multi-Horizon 정의
+  - 2.) Train / Test & 데이터 정규화 
 
     <img width="188" height="56" alt="train_test" src="https://github.com/user-attachments/assets/205662af-7aa7-477a-9633-219dd4bc9c13" />
 
     <img width="388" height="144" alt="화면 캡처 2025-08-04 170550" src="https://github.com/user-attachments/assets/39bf463c-f461-4ed5-9422-c19bcd9b9b0f" />
+
+  - 3.) Multi-Horizon 정의
+
+      → (B,T,D)형태를 가진 총 3개 예측모델 구축 & 8개 Multi Horizon에 대한 검증 수행
 
     <img width="272" height="247" alt="화면 캡처 2025-08-04 171406" src="https://github.com/user-attachments/assets/c268851e-68d6-4924-9de4-9922b168050d" />
 
@@ -39,18 +43,20 @@
 
        → CNN-LSTM Best Layer 구조로 확인 
 
-  - 2.) Monte Carlo Dropout 기반 Encoder-Decoder 예측 예시  
+  - 2.) Monte Carlo Dropout 기반 Encoder-Decoder 예측 예시
+
+    <img width="420" height="120" alt="다운로드" src="https://github.com/user-attachments/assets/191c3938-7078-4b2f-99f0-3c35b174cb5a" />
+    
 
        → Gaussian & Quantile Uncertainty (MCD N=30 & mean/median)
 
-       → Mean/Median은 점추정값으로 정의
-
-    <img width="420" height="120" alt="다운로드" src="https://github.com/user-attachments/assets/191c3938-7078-4b2f-99f0-3c35b174cb5a" />
+       → Mean/Median은 불확실성 기반 최종 점추정값으로 정의
 
 
-    <img width="448" height="130" alt="화면 캡처 2025-08-04 172213" src="https://github.com/user-attachments/assets/4d2d8457-a104-41fb-80a8-bb5d8dd7bec1" />
+    <img width="448" height="130" alt="화면 캡처 2025-08-04 172213" src="https://github.com/user-attachments/assets/4d2d8457-a104-41fb-80a8-bb5d8dd7bec1" />   
 
     <img width="449" height="120" alt="화면 캡처 2025-08-04 172234" src="https://github.com/user-attachments/assets/603db172-1aa0-4024-bf50-37484e88f25b" />
+    
 
    - 3.) 전체 Horizon 종합 평균 성능 평가
 
@@ -64,6 +70,7 @@
        → Best Model & 통계기반 Multi Horizon, One-Step Ahead DL 비교
 
        <img width="404" height="225" alt="화면 캡처 2025-08-04 173607" src="https://github.com/user-attachments/assets/e49ed487-45e1-457a-8366-5ad09be690e7" />
+       
 --- 
 
 ### 핵심 프로세스 2 예시 (Prior Individual Forecasts from Uncertainty Quantification)
@@ -92,10 +99,18 @@
 
     <img width="322" height="385" alt="화면 캡처 2025-08-04 174859" src="https://github.com/user-attachments/assets/32caae4e-8c94-4eca-94f3-f8d4b972f47a" />
 
-### 향후 예측 예시 
+---
 
 
+### 향후 예측 예시 (Out of Distribution) 
+
+  - 1.) MCD CNN-LSTM Encoder-Decoder 모델 고정
+
+  - 2.) 기존 MinMax Scale 완료된 Test Data중 마지막 (B,T,D) 시퀀스로 향후 1년 물동량 예측
+
+  - 3.) Uncertainty Quantification & MCD개별 Horizon Forecast 중 DTW기반 우선순위 Scenario 출력 
+
+   <img width="401" height="338" alt="화면 캡처 2025-08-04 175714" src="https://github.com/user-attachments/assets/386de5c2-3272-4f24-b8f5-afa9d12ab622" />
 
   
-
 ---

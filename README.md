@@ -27,7 +27,7 @@
 
   - 3.) Multi-Horizon 정의
 
-      → (B,T,D)형태를 가진 총 3개 예측모델 구축 & 8개 Multi Horizon에 대한 검증 수행
+      →  (B,T,D)형태로 학습된 각 예측모델마다 를 가진 총 3개 종류의 Sequence문제 정의 & 총 8개 Multi Horizon에 대한 검증 수행
 
     <img width="272" height="247" alt="화면 캡처 2025-08-04 171406" src="https://github.com/user-attachments/assets/c268851e-68d6-4924-9de4-9922b168050d" />
 
